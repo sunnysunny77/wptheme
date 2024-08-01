@@ -11,8 +11,8 @@ self.addEventListener("install", (event) => {
     addResourcesToCache([
       "/index.php",
       "/index.php/example",
-      "/wp-content/themes/bsv3/assets/js/app.min.js",
-      "/wp-content/themes/bsv3/assets/css/app.min.css",
+      "/wp-content/themes/wptheme-main/assets/js/app.min.js",
+      "/wp-content/themes/wptheme-main/assets/css/app.min.css"
     ])
   );
 });
