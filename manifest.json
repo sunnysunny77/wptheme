@@ -1,0 +1,21 @@
+{
+    "name": "bsv3",
+    "short_name": "bsv3",
+    "background_color": "#FFC0CB",
+    "theme_color": "#FFC0CB",
+    "display": "standalone",
+    "start_url": "/",
+    "icons": [       
+        {
+            "src": "assets/images/pwa-logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/images/pwa-logo-small.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ]
+   
+}
