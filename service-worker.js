@@ -1,31 +1,67 @@
 const version = "v1";
 
-self.addEventListener("install", function(event) {
+const addResourcesToCache = async (resources) => {
+
+  const cache = await caches.open(version);
+  await cache.addAll(resources);
+};
+
+self.addEventListener("install", (event) => {
+
+  console.log(`${version} installing...`);
 
   event.waitUntil(
-    caches.open(version).then(function(cache) {
-      return cache.addAll([
-        "/index.php",
-        "/index.php/example",
-        "/wp-content/themes/wptheme-main/assets/js/app.min.js",
-        "/wp-content/themes/wptheme-main/assets/css/app.min.css"
-      ]);
-    })
+    addResourcesToCache([
+      "/index.php",
+      "/index.php/example",
+      "/index.php/posts",
+      "/wp-content/themes/wptheme-main/assets/js/app.min.js",
+      "/wp-content/themes/wptheme-main/assets/css/app.min.css"
+    ])
   );
 });
 
-self.addEventListener("fetch", event => {
+async function fetchAndCacheIfOk(event) {
 
-  event.respondWith(caches.open("v1").then((cache) => {
+  try {
 
-    return fetch(event.request).then((networkResponse) => {
+    const response = await fetch(event.request);
 
-      cache.put(event.request, networkResponse.clone());
+    if (response.ok) {
 
-      return networkResponse;
-    }).catch(() => {
+      const responseClone = response.clone();
+      const cache = await caches.open(version);
+      await cache.put(event.request, responseClone);
+    }
 
-      return caches.match(event.request);
-    });
-  }));
-});
+    return response;
+  } catch (e) {
+
+    return e;
+  }
+}
+
+async function fetchWithCache(event) {
+
+  const cache = await caches.open(version);
+  const response = await cache.match(event.request);
+
+  if (response) {
+
+    fetchAndCacheIfOk(event);
+    return response;
+  } else {
+
+    return fetchAndCacheIfOk(event);
+  }
+}
+
+function handleFetch(event) {
+
+  if (event.request.headers.get("cache-control") !== "no-cache") {
+
+    event.respondWith(fetchWithCache(event));
+  }
+}
+
+self.addEventListener("fetch", handleFetch);
