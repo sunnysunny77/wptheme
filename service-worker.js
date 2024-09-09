@@ -20,47 +20,18 @@ self.addEventListener("install", (event) => {
   );
 });
 
-async function fetchAndCacheIfOk(event) {
+self.addEventListener("fetch", event => {
 
-  try {
+  event.respondWith(caches.open("v1").then((cache) => {
 
-    const response = await fetch(event.request);
+    return fetch(event.request).then((networkResponse) => {
 
-    if (response.ok) {
+      cache.put(event.request, networkResponse.clone());
 
-      const responseClone = response.clone();
-      const cache = await caches.open(version);
-      await cache.put(event.request, responseClone);
-    }
+      return networkResponse;
+    }).catch(() => {
 
-    return response;
-  } catch (e) {
-
-    return e;
-  }
-}
-
-async function fetchWithCache(event) {
-
-  const cache = await caches.open(version);
-  const response = await cache.match(event.request);
-
-  if (response) {
-
-    fetchAndCacheIfOk(event);
-    return response;
-  } else {
-
-    return fetchAndCacheIfOk(event);
-  }
-}
-
-function handleFetch(event) {
-
-  if (event.request.headers.get("cache-control") !== "no-cache") {
-
-    event.respondWith(fetchWithCache(event));
-  }
-}
-
-self.addEventListener("fetch", handleFetch);
+      return caches.match(event.request);
+    });
+  }));
+});
