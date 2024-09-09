@@ -1,67 +1,40 @@
-const version = "v1";
+const cacheName = "v1";
+const assetsToCache = [
+  "/",
+  "/index.php",
+  "/index.php/example",
+  "/index.php/posts",
+  "/wp-content/themes/wptheme-main/assets/js/app.min.js",
+  "/wp-content/themes/wptheme-main/assets/css/app.min.css",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-Black.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-Bold.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-ExtraBold.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-ExtraLight.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-Light.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-Medium.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-Regular.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-SemiBold.ttf",
+  "/wp-content/themes/wptheme-main/assets/font/Poppins-Thin.ttf",
+  "/wp-content/themes/wptheme-main/assets/webfonts/fa-regular-400.woff2",
+  "/wp-content/themes/wptheme-main/assets/webfonts/fa-brands-400.woff2",
+  "/wp-content/themes/wptheme-main/assets/webfonts/fa-solid-900.woff2"
+];
 
-const addResourcesToCache = async (resources) => {
-
-  const cache = await caches.open(version);
-  await cache.addAll(resources);
-};
-
-self.addEventListener("install", (event) => {
-
-  console.log(`${version} installing...`);
-
+self.addEventListener("install", function(event) {
   event.waitUntil(
-    addResourcesToCache([
-      "/index.php",
-      "/index.php/example",
-      "/index.php/posts",
-      "/wp-content/themes/wptheme-main/assets/js/app.min.js",
-      "/wp-content/themes/wptheme-main/assets/css/app.min.css"
-    ])
+    caches.open(cacheName).then(function(cache) {
+      return cache.addAll(assetsToCache);
+    })
   );
 });
 
-async function fetchAndCacheIfOk(event) {
-
-  try {
-
-    const response = await fetch(event.request);
-
-    if (response.ok) {
-
-      const responseClone = response.clone();
-      const cache = await caches.open(version);
-      await cache.put(event.request, responseClone);
-    }
-
-    return response;
-  } catch (e) {
-
-    return e;
-  }
-}
-
-async function fetchWithCache(event) {
-
-  const cache = await caches.open(version);
-  const response = await cache.match(event.request);
-
-  if (response) {
-
-    fetchAndCacheIfOk(event);
-    return response;
-  } else {
-
-    return fetchAndCacheIfOk(event);
-  }
-}
-
-function handleFetch(event) {
-
-  if (event.request.headers.get("cache-control") !== "no-cache") {
-
-    event.respondWith(fetchWithCache(event));
-  }
-}
-
-self.addEventListener("fetch", handleFetch);
+self.addEventListener("fetch", function(event) {
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      if (response) {
+        return response;
+      }
+      return fetch(event.request);
+    })
+  );
+});
