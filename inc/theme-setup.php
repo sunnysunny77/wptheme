@@ -50,7 +50,7 @@ function boot_scripts()
     ));
 
     wp_localize_script('preload-script', 'preload_object', array(
-        'root' => get_template_directory_uri(),
+        'root' => get_template_directory_uri() . '/assets',
     ));
 }
 add_action('wp_enqueue_scripts', 'boot_scripts');

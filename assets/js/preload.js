@@ -1,14 +1,42 @@
-const preload_image = (url) => {
-  var img = new Image();
-  img.src = url;
+const preload = (href, as) => {
+  const preloadLink = document.createElement("link");
+  preloadLink.href = href;
+  preloadLink.rel = "preload";
+  preloadLink.as = as;
+  if (as === "font") {
+    preloadLink.crossOrigin = "true";
+  }
+  document.head.appendChild(preloadLink);
 };
 
 const path = location.pathname;
 
+const fonts = [
+  "/font/Poppins-Black.ttf",
+  "/font/Poppins-Bold.ttf",
+  "/font/Poppins-ExtraBold.ttf",
+  "/font/Poppins-ExtraLight.ttf",
+  "/font/Poppins-Light.ttf",
+  "/font/Poppins-Medium.ttf",
+  "/font/Poppins-Regular.ttf",
+  "/font/Poppins-SemiBold.ttf",
+  "/font/Poppins-Thin.ttf",
+  "/font/Poppins-SemiBold.ttf",
+  "/webfonts/fa-regular-400.woff2",
+  "/webfonts/fa-brands-400.woff2",
+  "/webfonts/fa-solid-900.woff2"
+];
+
 if(path.includes("example")) {
 
-  // preload_image(`${preload_object.root}/assets/images/..`);
+  for (const index of fonts) {
+
+    preload(`${preload_object.root}${index}`, "font");
+  }
 } else {
 
-  // preload_image(`${preload_object.root}/assets/images/..`);
+  for (const index of fonts) {
+
+    preload(`${preload_object.root}${index}`, "font");
+  }
 }
