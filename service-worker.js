@@ -1,22 +1,16 @@
 const version = "v1";
 
-const addResourcesToCache = async (resources) => {
-
-  const cache = await caches.open(version);
-  await cache.addAll(resources);
-};
-
-self.addEventListener("install", (event) => {
-
-  console.log(`${version} installing...`);
+self.addEventListener("install", function(event) {
 
   event.waitUntil(
-    addResourcesToCache([
-      "/index.php",
-      "/index.php/example",
-      "/wp-content/themes/wptheme-main/assets/js/app.min.js",
-      "/wp-content/themes/wptheme-main/assets/css/app.min.css"
-    ])
+    caches.open(version).then(function(cache) {
+      return cache.addAll([
+        "/index.php",
+        "/index.php/example",
+        "/wp-content/themes/wptheme-main/assets/js/app.min.js",
+        "/wp-content/themes/wptheme-main/assets/css/app.min.css"
+      ]);
+    })
   );
 });
 
