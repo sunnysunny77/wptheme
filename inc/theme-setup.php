@@ -45,13 +45,13 @@ function boot_scripts()
     wp_enqueue_script('preload-script', get_template_directory_uri() . '/assets/js/preload.js','', '', false);
 
     wp_localize_script('app-scripts', 'frontend_ajax_object', array(
-        'ajax_url' => admin_url( 'admin-ajax.php' ),
-        //'data_var_1' => 'test',
+        'ajax_url' => admin_url( 'admin-ajax.php' )
     ));
 
     wp_localize_script('preload-script', 'preload_object', array(
         'root' => get_template_directory_uri() . '/assets',
     ));
+
 }
 add_action('wp_enqueue_scripts', 'boot_scripts');
 
