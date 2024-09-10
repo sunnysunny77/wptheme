@@ -22,6 +22,10 @@ self.addEventListener("install", (event) => {
 self.addEventListener("fetch", (event) => {
     console.log("Fetching via Service worker");
   
+    if (event.request.url.match(/wp-admin/) || event.request.url.match(/preview=true/)) {
+      return;
+      }
+
     event.respondWith(
       fetch(event.request)
         .then((networkResponse) => {
