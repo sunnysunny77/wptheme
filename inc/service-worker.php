@@ -1,6 +1,6 @@
 <?php
 
-//note  Service-Worker-Allowed header reuqired eg:  add_header Service-Worker-Allowed "/"; for nginx
+//note:  Service-Worker-Allowed header reuqired eg:  add_header Service-Worker-Allowed "/"; for nginx, or move worker.js to wordpress root and adjust 'root' => get_site_url(),
 function boot_register_service_worker()
 {
 
