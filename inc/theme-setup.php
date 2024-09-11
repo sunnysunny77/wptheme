@@ -146,3 +146,5 @@ function boot_custom_logo_output( $html ) {
 	return $html;
 }
 add_filter('get_custom_logo', 'boot_custom_logo_output', 10);
+
+add_filter('show_admin_bar', '__return_false');
