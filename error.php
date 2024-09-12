@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Offline</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/wp-content/themes/wptheme-main/assets/css/app.min.css">
+    <link rel="stylesheet" href="/wp-content/themes/<?php echo basename(__DIR__); ?>/assets/css/app.min.css">
     <style>
         div {
             display: flex;
@@ -29,7 +29,7 @@
     
     <div style="text-align: center;">
 
-        <img width="192" height="192" src="/wp-content/themes/wptheme-main/assets/images/pwa-logo-small.webp" alt="app logo"/>
+        <img width="192" height="192" src="/wp-content/themes/<?php echo basename(__DIR__); ?>/assets/images/pwa-logo-small.webp" alt="app logo"/>
 
         <h1> Area not available offline.. Please wait to be redirected </h1>
 
