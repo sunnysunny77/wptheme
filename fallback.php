@@ -23,14 +23,7 @@
 
     </main>
 
-    <script>
-
-        document.getElementById("go-back").addEventListener("click", () => {
-
-            history.back();
-        });
-
-    </script>
+    <script src="/wp-content/themes/<?php echo basename(__DIR__); ?>/assets/js/fallback.js" defer></script>
 
 </body>
 </html>

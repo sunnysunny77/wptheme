@@ -7,6 +7,7 @@ const resources = [
   "./assets/css/fallback.css",
   "./assets/js/app.min.js",
   "./assets/js/preload.js",
+  "./assets/js/fallback.js",
   "./assets/js/service-worker.js",
   "./assets/images/pwa-logo-small.webp",
   "./assets/font/Poppins-Black.ttf",
