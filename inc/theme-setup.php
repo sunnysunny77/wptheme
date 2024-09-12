@@ -37,12 +37,13 @@ add_action('after_setup_theme', 'boot_setup');
 
 function boot_scripts()
 {
+    wp_dequeue_style( 'wp-block-library' );
 
-    wp_enqueue_style('app-style', get_template_directory_uri() . '/assets/css/app.min.css');
+    wp_enqueue_style('app-style', get_template_directory_uri() . '/assets/css/app.min.css', '', null);
 
-    wp_enqueue_script('app-scripts', get_template_directory_uri() . '/assets/js/app.min.js','', '', true);
+    wp_enqueue_script('app-scripts', get_template_directory_uri() . '/assets/js/app.min.js','', null, true);
 
-    wp_enqueue_script('preload-script', get_template_directory_uri() . '/assets/js/preload.js','', '', false);
+    wp_enqueue_script('preload-script', get_template_directory_uri() . '/assets/js/preload.js','', null, false);
 
     wp_localize_script('app-scripts', 'frontend_ajax_object', array(
         'ajax_url' => admin_url( 'admin-ajax.php' )
@@ -148,3 +149,8 @@ function boot_custom_logo_output( $html ) {
 add_filter('get_custom_logo', 'boot_custom_logo_output', 10);
 
 add_filter('show_admin_bar', '__return_false');
+
+function boot_favicon(){
+    echo "<link rel='shortcut icon' href='" . get_stylesheet_directory_uri() . "/favicon.ico' />" . "\n";
+}
+add_action( 'wp_head', 'boot_favicon');

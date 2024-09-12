@@ -4,7 +4,7 @@
 function boot_register_service_worker()
 {
 
-    wp_enqueue_script('pwa-service-worker', get_template_directory_uri() . '/assets/js/service-worker.js','', '', false);
+    wp_enqueue_script('pwa-service-worker', get_template_directory_uri() . '/assets/js/service-worker.js','', null, false);
 
     wp_localize_script('pwa-service-worker', 'pwa_object', array(
         'root' => get_template_directory_uri(),
