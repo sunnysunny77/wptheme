@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Offline</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/wp-content/themes/<?php echo basename(__DIR__); ?>/favicon.ico">
     <link rel="stylesheet" href="/wp-content/themes/<?php echo basename(__DIR__); ?>/assets/css/app.min.css">
     <style>
         div {
