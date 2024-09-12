@@ -22,7 +22,7 @@ const resources = [
   "./assets/webfonts/fa-solid-900.woff2",
   "./favicon.ico",  
   "./manifest.json",  
-  "./error.php",
+  "./fallback.php"
 ];
 
 const installResources = async (resources) => {
@@ -71,7 +71,7 @@ const first = async (req) => {
 
     if (req.mode === "navigate") {
 
-      const fallback = await caches.match("./error.php");
+      const fallback = await caches.match("./fallback.php");
 
       if (fallback) {
 
