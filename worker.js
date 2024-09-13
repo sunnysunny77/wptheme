@@ -36,11 +36,17 @@ const installResources = async (resources) => {
 self.addEventListener("install", (event) => {
 
   console.log("Service worker is installed");
-  
+
   self.skipWaiting();
 
   event.waitUntil(installResources(resources));
 });
+
+const cache = async (req, res) => {
+
+  const cache = await caches.open(cacheName);
+  await cache.put(req, res);
+};
 
 const first = async (req) => {
 
@@ -48,24 +54,16 @@ const first = async (req) => {
 
     const res = await fetch(req);
 
-    if (res) {
+    cache(req, res.clone());
 
-      const cache = await caches.open(cacheName);
-
-      if (cache) {
-
-        cache.put(req, res.clone());
-      }
-
-      return res;
-    }
+    return res;
 
   } catch (error) {
 
     console.log(error);
 
     const cache = await caches.match(req);
-      
+
     if (cache) {
 
       return cache;
@@ -94,10 +92,10 @@ self.addEventListener("fetch", (event) => {
   console.log("Fetching via Service worker");
 
   if (event.request.url.match(/wp-admin/) || event.request.url.match(/preview=true/)) {
-    
+
     return;
   } else {
-    
+
     event.respondWith(first(event.request));
   }
 });
