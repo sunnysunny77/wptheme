@@ -61,7 +61,7 @@ function boot_post_limits($query)
     if (!is_admin() && $query->is_main_query()) {
 
         if (is_home()) {
-            $query->set('posts_per_page', '3');
+            $query->set('posts_per_page', '2');
         }
     }
 }
@@ -97,7 +97,7 @@ function boot_on_theme_activation()
         $page = array(
             'post_title'     => 'Home',
             'post_type'      => 'page',
-            'post_name'      => 'Home',
+            'post_name'      => 'home',
             'post_status'    => 'publish',
             'page_template'  => 'front-page.php',
         );
@@ -108,9 +108,9 @@ function boot_on_theme_activation()
 
     if (!get_option('page_for_posts')) {
         $page = array(
-            'post_title'     => 'Posts',
+            'post_title'     => 'Blog',
             'post_type'      => 'page',
-            'post_name'      => 'Posts',
+            'post_name'      => 'blog',
             'post_status'    => 'publish',
             'page_template'  => 'home.php',
         );
@@ -121,11 +121,11 @@ function boot_on_theme_activation()
     if (!get_post_status(256)) {
         $page = array(
             'import_id'      =>  256,
-            'post_title'     => 'Example',
+            'post_title'     => 'Products',
             'post_type'      => 'page',
-            'post_name'      => 'Example',
+            'post_name'      => 'products',
             'post_status'    => 'publish',
-            'page_template'  => 'page-example.php',
+            'page_template'  => 'page-product.php',
         );
         $id = wp_insert_post($page);
     }
@@ -134,23 +134,54 @@ function boot_on_theme_activation()
 }
 add_action('after_switch_theme', 'boot_on_theme_activation');
 
-add_filter( 'pre_option_upload_path', function( $upload_path ) {
-    return  get_template_directory() . '/files' ;
-});
-
-add_filter( 'pre_option_upload_url_path', function( $upload_url_path ) {
-    return get_template_directory_uri() . '/files';
-});
-
-function boot_custom_logo_output( $html ) {
-	$html = str_replace('custom-logo-link', 'navbar-brand', $html );
-	return $html;
-}
-add_filter('get_custom_logo', 'boot_custom_logo_output', 10);
-
 add_filter('show_admin_bar', '__return_false');
 
 function boot_favicon(){
     echo "<link rel='shortcut icon' href='" . get_stylesheet_directory_uri() . "/favicon.ico' />" . "\n";
 }
 add_action( 'wp_head', 'boot_favicon');
+
+function sync_acf_title_with_post_title( $post_id ) {
+    if ( get_post_type( $post_id ) !== 'products' ) {
+        return;
+    }
+
+    remove_action( 'save_post', 'sync_acf_title_with_post_title' );
+
+    $post_title = get_the_title( $post_id );
+    update_field( 'title', $post_title, $post_id );
+
+    add_action( 'save_post', 'sync_acf_title_with_post_title' );
+}
+add_action( 'save_post', 'sync_acf_title_with_post_title' );
+
+function sync_post_title_with_acf_title( $post_id ) {
+    if ( get_post_type( $post_id ) !== 'products' ) {
+        return;
+    }
+
+    $acf_title = get_field( 'title', $post_id );
+    if ( $acf_title ) {
+        remove_action( 'acf/save_post', 'sync_post_title_with_acf_title' );
+
+        wp_update_post([
+            'ID'         => $post_id,
+            'post_title' => $acf_title,
+        ]);
+
+        add_action( 'acf/save_post', 'sync_post_title_with_acf_title', 20 );
+    }
+}
+add_action( 'acf/save_post', 'sync_post_title_with_acf_title', 20 );
+
+function add_defer_attribute($tag, $handle, $src) {
+
+    $defer_scripts = array('app-scripts', 'preload-script', 'pwa-service-worker');
+
+    if (in_array($handle, $defer_scripts)) {
+        return '<script src="' . esc_url($src) . '" defer></script>';
+    }
+
+    return $tag;
+}
+add_filter('script_loader_tag', 'add_defer_attribute', 10, 3);

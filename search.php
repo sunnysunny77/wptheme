@@ -1,50 +1,111 @@
 <?php get_header(); ?>
 
-    <main id="main" class="container">
+    <main id="main" class="container template py-11">
 
-        <h1> 
+        <h1 class="text-center pb-8"> 
 
             Search: &nbsp; <?php the_search_query() ?>
             
         </h1>
 
-        <?php if (have_posts()) { ?>
+        <?php
 
-            <?php while (have_posts()) { the_post(); ?>
+            $search_term = get_search_query();
 
-                <?php if (has_post_thumbnail()) {  echo '<div role="img" aria-label="post_thumbnail" style="background-image: url(' . get_the_post_thumbnail_url() . ');"></div>'; } ?>
+            $args_products = [
+                'post_type'      => ['products'],
+                'posts_per_page' => -1,
+                'meta_query' => [
+                    'relation' => 'OR',
+                    [
+                        'key'     => 'title',
+                        'value'   => $search_term,
+                        'compare' => 'LIKE',
+                    ],
+                    [
+                        'key'     => 'description',
+                        'value'   => $search_term,
+                        'compare' => 'LIKE',
+                    ],
+                    [
+                        'key'     => 'size',
+                        'value'   => $search_term,
+                        'compare' => 'LIKE',
+                    ],
+                    [
+                        'key'     => 'price',
+                        'value'   => $search_term,
+                        'compare' => 'LIKE',
+                    ],
+                ],
+            ];
 
-                <h2> 
+            $search_query_products = new WP_Query($args_products);
 
-                    <a href="<?php the_permalink() ?>">
-                        
-                        <?php the_title(); ?>
-                        
-                    </a>
+            if ($search_query_products->have_posts())  {
 
-                </h2>
+                while ($search_query_products->have_posts()) { 
+                    
+                        $search_query_products->the_post();   
+                        $title         = get_field("title");
+                        $image         = get_field("image");
+                        $description   = get_field("description");
+                        $size          = get_field("size");
+                        $price         = get_field("price");
+                      
+                    ?>
 
-                <br>
+                    <?php if ($title) { ?>
 
-                <?php the_content() ?>
+                        <h2 class="w-100"> 
 
-                <p>
+                            <a class="menu-item" href="<?php the_permalink() ?>">
+                                
+                                <?php echo $title; ?>
+                                
+                            </a>
 
-                    Comments:
+                        </h2>
 
-                    <?php comments_popup_link(); ?>
+                    <?php } ?>
 
-                </p>
+                    <?php if ($image) { ?>
 
-            <?php } ?>
+                        <img src="<?php echo $image["url"]; ?>" alt="<?php echo $image["alt"]; ?>" />
 
-        <?php } else { ?>
+                    <?php } ?>
+                    
+                    <span class="d-block pb-7 content">
 
-            <p>
+                        <?php if ($description) { ?>
 
-                <?php echo 'No results found for:'; ?> &nbsp; <?php echo get_search_query(); ?>
+                            <div><?php echo $description; ?></div>
 
-            </p>
+                        <?php } ?>
+
+                        <?php if ($size) { ?>
+
+                            <p> Size: <?php echo $size; ?></p>
+
+                        <?php } ?>
+
+                        <?php if ($price) { ?>
+
+                            <p >$<?php echo $price; ?></p>
+
+                        <?php } ?>
+
+                    </span>
+
+                    <hr class="mb-9 mx-2"/>
+
+                <?php } wp_reset_postdata();
+
+            }  else { ?>
+
+                <p class="mb-4 pb-6">No posts found.</p>
+
+                <hr class="mb-6 mx-2"/>
 
         <?php } ?>
 

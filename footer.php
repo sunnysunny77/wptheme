@@ -1,75 +1,60 @@
-    <?php 
 
-        //Custom Post 
-        $products = new WP_Query(array(
-            'post_type' => 'products',
-            'post_status' => 'publish',
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'ignore_sticky_posts' => 1, // if you are missing a post check this
-            'posts_per_page' => 20, // -1 for infinite results
-        ));
-        wp_reset_query();
+        <footer class="container-fluid py-8">
 
-    ?> 
-    
-    <footer class="container d-flex flex-wrap justify-content-between">
-    
-        <?php if ( has_nav_menu( 'footer-nav' ) ) {
-            wp_nav_menu(array(
-                'theme_location'    => 'footer-nav',
-                'depth'             => 2,
-                'container'         => 'ul',
-                'container_id'      => 'footer-nav',
-                'menu_class'        => 'col-48 col-sm-24 list-unstyled',
-                'items_wrap' => '<ul id="%1$s" class="%2$s"><li>links</li>%3$s</ul>'
-                )
-            ); 
-        }?>
+            <div class="px-8 row justify-content-between align-items-center">
 
-        <ul class="col-48 col-sm-24 col-lg-16 text-end list-unstyled">
+                <?php if ( has_nav_menu( 'footer-nav' ) ) {
+                    wp_nav_menu(
+                        array(
+                        'theme_location'    => 'footer-nav',
+                        'depth'             => 2,
+                        'container'         => 'div',
+                        'container_class'   => 'col-48 col-md-auto order-1 order-md-2 d-flex flex-fill',
+                        'container_id'      => 'footer-nav',
+                        'fallback_cb'       => 'WP_Bootstrap_Navwalker::fallback',
+                        'menu_class'        => 'd-flex flex-column flex-md-row p-0 m-md-0',
+                        'walker'            => new WP_Bootstrap_Navwalker(),
+                        )
+                    );
+                }?>
 
-            <li>
+                <div class="col-48 col-md-auto d-flex order-2 order-md-1">
 
-                <i class="fa-regular fa-copyright"></i>
+                    <?php
 
-            </li>
+                        if (function_exists('the_custom_logo')) {
 
-            <li>
+                            the_custom_logo();
 
-                Products
-                
-            </li>
-
-            <?php
-
-                while ($products->have_posts()) { $products->the_post();
+                        }
 
                     ?>
 
-                        <li>
-                            
-                            <a href="<?php the_permalink() ?>">
-                                
-                                <?php the_title(); ?>
-                                
-                            </a>
+                </div>
 
-                        </li>
+                <ul class="footer-right col-48 col-md-auto d-flex flex-column flex-fill align-items-end list-unstyled order-3">
 
-                    <?php
-                }
-            ?>
+                    <?php dynamic_sidebar("widget_one"); ?>
 
-            <?php dynamic_sidebar("widget_one"); ?>
+                    <li>
 
-	    </ul>
-  
-    </footer>
+                        <i class="fa-regular fa-copyright"></i>
 
-    <?php wp_footer(); ?>
+                        <?php echo date('Y'); ?>
+
+                    </li>
+
+                </ul>
+
+            </div>
     
+        </footer>
+
+    </div>
+
 </body>
+
+<?php wp_footer(); ?>
 
 </html>
 

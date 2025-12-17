@@ -4,8 +4,10 @@ const cacheName = `wptheme-v${version}`;
 const resources = [
   "/",
   "./assets/css/app.min.css",
+  "./assets/css/app.min.css.map",
   "./assets/css/fallback.css",
   "./assets/js/app.min.js",
+  "./assets/js/app.min.js.map",
   "./assets/js/preload.js",
   "./assets/js/fallback.js",
   "./assets/js/service-worker.js",

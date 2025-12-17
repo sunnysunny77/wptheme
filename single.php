@@ -1,6 +1,6 @@
 <?php get_header() ?>
 
-    <main id="main" class="container">
+    <main id="main" class="container template py-11">
 
         <?php if (have_posts()) { ?>
 
@@ -17,63 +17,74 @@
 
                 <section id="post-<?php the_ID(); ?>" <?php post_class($classes); ?>>
 
-                    <h1><?php the_title(); ?></h1>
+                    <h1 class="mb-7 text-center w-100"> <?php the_title(); ?></h1>      
 
-                    <?php echo get_the_date(); ?>
+                    <span class="d-block pb-3">
 
-                    <?php the_time(); ?>
-
-                    <?php the_author(); ?><br />
-
-                    <?php if (has_post_thumbnail()) { ?>
-
-                        <div>
-
-                            <?php the_post_thumbnail(); ?>
-
-                        </div>
-                        
-                    <?php } ?>
-
-                    <?php the_content() ?>
-
-                    <?php edit_post_link(); ?>
-
-                    <?php the_post_navigation(array(
-                        'prev_text' => '← %title',
-                        'next_text' => '→ %title',
-                        'screen_reader_text' => 'Continue Reading',
-                        )
-                    );?>
-
-                    <p>
-
-                        By: &nbsp;
-                        <?php the_author(); ?>
-                        ,
                         <?php echo get_the_date(); ?>
-                        
-                    </p>
 
-                    <?php the_category(); ?>
+                    </span>
 
-                    <?php if (the_tags()) { ?>
-                        
-                        <p>
+                    <?php 
+                        if ( has_post_thumbnail() ) {
+                            the_post_thumbnail('thumbnail', [
+                                'class' => 'featured-image',
+                                'alt'   => get_the_title()
+                            ]);
+                        }
+                    ?> 
+				
+                    <span class="d-block pb-6 content">
 
-                            <?php the_tags(); ?>
+                        <?php the_content(); ?>
 
-                        </p>
+                        <?php edit_post_link(); ?>
 
-                    <?php } ?>
+                        <?php if (get_previous_post_link() || get_next_post_link()) { ?>
 
-                    <?php if (comments_open() || get_comments_number()) {
+                            <nav class="pagination d-flex justify-content-start">
 
-                        comments_template();
-                        
-                    } ?>
+                                <?php if (get_previous_post_link()) { ?>
+
+                                    <div class="prev menu-item">
+
+                                        <?php previous_post_link('%link', 'Previous'); ?>
+
+                                    </div>
+
+                                <?php } ?>
+
+                                <?php if (get_previous_post_link() && get_next_post_link()) { ?>
+
+                                    &nbsp; | &nbsp;
+
+                                <?php } ?>
+
+                                <?php if (get_next_post_link()) { ?>
+
+                                    <div class="next menu-item">
+
+                                        <?php next_post_link('%link', 'Next'); ?>
+
+                                    </div>
+
+                                <?php } ?>
+
+                            </nav>
+
+                        <?php } ?> 
+
+                    </span>
 
                 </section>
+
+                <hr class="mb-3 mx-2"/>
+
+                <?php if (comments_open() || get_comments_number()) {
+
+                    comments_template();
+                        
+                } ?>
 
             <?php } ?>
 

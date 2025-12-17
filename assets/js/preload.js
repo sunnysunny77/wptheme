@@ -9,8 +9,6 @@ const preload = (href, as) => {
   document.head.appendChild(preloadLink);
 };
 
-const path = location.pathname;
-
 const fonts = [
   "/font/Poppins-Black.ttf",
   "/font/Poppins-Bold.ttf",
@@ -26,16 +24,7 @@ const fonts = [
   "/webfonts/fa-solid-900.woff2"
 ];
 
-if(path.includes("example")) {
+for (const index of fonts) {
 
-  for (const index of fonts) {
-
-    preload(`${preload_object.root}${index}`, "font");
-  }
-} else {
-
-  for (const index of fonts) {
-
-    preload(`${preload_object.root}${index}`, "font");
-  }
+  preload(`${preload_object.root}${index}`, "font");
 }
