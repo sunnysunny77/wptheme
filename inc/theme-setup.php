@@ -37,11 +37,12 @@ add_action('after_setup_theme', 'boot_setup');
 
 function boot_scripts()
 {
+    //Don’t load Gutenberg’s CSS on the frontend.
     wp_dequeue_style( 'wp-block-library' );
 
     wp_enqueue_style('app-style', get_template_directory_uri() . '/assets/css/app.min.css', '', null);
 
-    wp_enqueue_script('app-scripts', get_template_directory_uri() . '/assets/js/app.min.js','', null, true);
+    wp_enqueue_script('app-scripts', get_template_directory_uri() . '/assets/js/app.min.js', ['jquery'], null, true);
 
     wp_enqueue_script('preload-script', get_template_directory_uri() . '/assets/js/preload.js','', null, false);
 
