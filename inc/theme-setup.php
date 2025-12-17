@@ -130,6 +130,18 @@ function boot_on_theme_activation()
         $id = wp_insert_post($page);
     }
 
+    if (!get_post_status(259)) {
+        $page = array(
+            'import_id'      =>  259,
+            'post_title'     => 'Contact',
+            'post_type'      => 'page',
+            'post_name'      => 'contact',
+            'post_status'    => 'publish',
+            'page_template'  => 'page-contact.php',
+        );
+        $id = wp_insert_post($page);
+    }
+
 	update_option( 'uploads_use_yearmonth_folders', 0 );
 }
 add_action('after_switch_theme', 'boot_on_theme_activation');
